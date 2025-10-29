@@ -10,4 +10,8 @@
     <Compile Remove="Interfaces\IUserRepository.cs" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Remove="Interfaces\ITareaDppRepository.cs~RF213b04ef.TMP" />
+  </ItemGroup>
+
 </Project>
