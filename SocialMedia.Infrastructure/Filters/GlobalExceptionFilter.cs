@@ -1,12 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using SocialMedia.Core.Exceptions;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SocialMedia.Infrastructure.Filters
 {
@@ -14,21 +9,45 @@ namespace SocialMedia.Infrastructure.Filters
     {
         public void OnException(ExceptionContext context)
         {
-            var exception = (BussinesException)context.Exception;
-            var validation = new
+            if (context.Exception is BussinesException bussinesEx)
             {
-                Status = 400,
-                Title = "Bad Request",
-                Detail = exception.Message
-            };
+                // Error controlado (por ti)
+                var validation = new
+                {
+                    Status = 400,
+                    Title = "Bad Request",
+                    Detail = bussinesEx.Message
+                };
 
-            var json = new
+                var json = new
+                {
+                    errors = new[] { validation }
+                };
+
+                context.Result = new BadRequestObjectResult(json);
+                context.HttpContext.Response.StatusCode = (int)HttpStatusCode.BadRequest;
+            }
+            else
             {
-                errors = new[] { validation }
-            };
+                // Error general (por ejemplo, Dapper, null reference, etc.)
+                var error = new
+                {
+                    Status = 500,
+                    Title = "Internal Server Error",
+                    Detail = context.Exception.Message
+                };
 
-            context.Result = new BadRequestObjectResult(json);
-            context.HttpContext.Response.StatusCode = (int)HttpStatusCode.BadRequest;
+                var json = new
+                {
+                    errors = new[] { error }
+                };
+
+                context.Result = new ObjectResult(json)
+                {
+                    StatusCode = (int)HttpStatusCode.InternalServerError
+                };
+            }
+
             context.ExceptionHandled = true;
         }
     }

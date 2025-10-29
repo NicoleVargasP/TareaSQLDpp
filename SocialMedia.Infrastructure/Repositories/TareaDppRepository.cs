@@ -7,9 +7,9 @@ namespace SocialMedia.Infrastructure.Repositories
 {
     public class TareaDppRepository : ITareaDppRepository
     {
-        private readonly DapperContext _dapper;
+        private readonly IDapperContext _dapper;
 
-        public TareaDppRepository(DapperContext dapper)
+        public TareaDppRepository(IDapperContext dapper)
         {
             _dapper = dapper;
         }
@@ -43,7 +43,7 @@ namespace SocialMedia.Infrastructure.Repositories
                     DATEDIFF(YEAR, u.DateOfBirth, GETDATE()) AS Edad
                 FROM [dbo].[Comment] c
                 INNER JOIN [dbo].[User] u ON c.UserId = u.Id
-                WHERE c.DateComment >= DATEADD(MONTH, -3, GETDATE())
+                WHERE c.Date >= DATEADD(MONTH, -3, GETDATE())
                   AND DATEDIFF(YEAR, u.DateOfBirth, GETDATE()) > 25;
             ";
 
