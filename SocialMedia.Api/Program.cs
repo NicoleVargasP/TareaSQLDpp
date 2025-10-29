@@ -35,7 +35,9 @@ namespace SocialMedia.Api
             // Inyectar las dependencias
             //builder.Services.AddTransient<IPostRepository, PostRepository>();
             builder.Services.AddTransient<IPostService, PostService>();
+            builder.Services.AddTransient<ITareaDppService, TareaDppService>();
             //builder.Services.AddTransient<IUserRepository, UserRepository>();
+            builder.Services.AddTransient<ITareaDppRepository, TareaDppRepository>();
             builder.Services.AddScoped(typeof(IBaseRepository<>), typeof(BaseRepository<>));
             builder.Services.AddTransient<IUnitOfWork, UnitOfWork>();
             builder.Services.AddSingleton<IDbConnectionFactory, DbConnectionFactory>();
